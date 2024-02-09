@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // });
 const cors = require("cors");
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: "https://bright-semolina-09586e.netlify.app",
   "Content-Type": "Authorization",
   credentials: true,
   optionSuccessStatus: 200,
