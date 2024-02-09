@@ -8,6 +8,7 @@ const sendToken = (user, statusCode, res) => {
     ),
     httpOnly: true,
     secure:true,
+    sameSite: "none",
   };
   localStorage.setItem("token", token);
   res.status(statusCode).cookie("token", token, options).json({
