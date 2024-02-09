@@ -96,6 +96,7 @@ const logout = catchAsyncError(async (req, res, next) => {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
+  localStorage.removeItem('token');
 
   res.status(200).json({
     success: true,
