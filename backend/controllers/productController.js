@@ -1,6 +1,6 @@
 const Product = require("../models/productModel");
 const ErrorHandler = require("../utils/errorhandler");
-const catchAsyncError = require("../middleware/catchAsyncError"); // ye vha kaam aata hai jese agr createProduct me name enter krna mandatory hai aur uske diya bne submit kre toh infite waiting loop me jaayega usko detect krne k liye
+const catchAsyncError = require("../middleware/catchAsyncError"); 
 const ApiFeatures = require("../utils/apifeature");
 const cloudinary = require("cloudinary");
 
@@ -30,7 +30,7 @@ const createProduct = catchAsyncError(async (req, res, next) => {
   req.body.images = imagesLinks;
   // req.body.user = req.user.id;
 
-  req.body.user = req.user.id; //hmne ye kia hai ki jab koi nya login krta hai ya new user hai uski ek id assign hoti hai. Ab agr voh bnda koi product issue krta hai toh hum us product ko user ki id de rhe hai jis se hme pta lag je konsaproduct konse user ne daala hai
+  req.body.user = req.user.id; 
   const product = await Product.create(req.body);
   res.status(201).json({
     success: true,
@@ -69,20 +69,16 @@ const uploadImages = catchAsyncError(async (req, res, next) => {
 
 //get products
 const getAllProducts = catchAsyncError(async (req, res, next) => {
-  // return next(new ErrorHandler("Product not found", 500)); used to check the alert error function created in the frontend in the home.js file
   const resultPerPage = 8;
   const productsCount = await Product.countDocuments(); //kitne products hai humpe
 
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
     .filter();
-  // ya toh seedha Product.find() kro sare element aajenge hum agr search paar me dalte hai kuch toh voh hmare keyword me aayega aut fir hum sirf us keyword
-  // ko dekhege toh uske liye search function bnaya hai apiFeature ke ander jha query hmari PRoduct.find() hai aur query value apiFeature me jaake query.keyword hai jo keyword=*** *hoti hai
   let products = await apiFeature.query;
 
   let filteredProductsCount = products.length;
-  // console.log(filteredProductsCount);
-
+ 
   apiFeature.pagination(resultPerPage);
 
   products = await apiFeature.query;
@@ -128,7 +124,6 @@ const updateProduct = catchAsyncError(async (req, res, next) => {
   }
 
   if (images !== undefined) {
-    // Deleting Images From Cloudinary
     for (let i = 0; i < product.images?.length; i++) {
       await cloudinary.v2.uploader.destroy(product.images[i].public_id);
     }
@@ -176,12 +171,6 @@ const getProductDetails = catchAsyncError(async (req, res, next) => {
 // delete product
 const deleteProduct = catchAsyncError(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
-  // if (!product) {
-  //   return res.status(500).json({
-  //     success: false,
-  //     message: "Product not found",
-  //   });
-  // }
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
@@ -213,7 +202,7 @@ const createProductReview = catchAsyncError(async (req, res, next) => {
   const product = await Product.findById(productId);
 
   const isReviewed = product.reviews.find(
-    (rev) => rev.user.toString() === req.user._id.toString() // sare previous reviews me traverse krenge aur dekhenge ki agr koi previous review ki user id current user se match krti hai agr hai esa toh purana vala review update krke ye vala daal denge
+    (rev) => rev.user.toString() === req.user._id.toString() 
   );
 
   if (isReviewed) {
@@ -243,7 +232,7 @@ const createProductReview = catchAsyncError(async (req, res, next) => {
 
 // Get All Reviews of a product
 const getProductReviews = catchAsyncError(async (req, res, next) => {
-  const product = await Product.findById(req.query.id); // here id repersent the id of product jiske review dhoondne hai
+  const product = await Product.findById(req.query.id);
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
@@ -257,14 +246,14 @@ const getProductReviews = catchAsyncError(async (req, res, next) => {
 
 // Delete Review
 const deleteReview = catchAsyncError(async (req, res, next) => {
-  const product = await Product.findById(req.query.productId); // productid was used to find the product of which review is beinng deleted
+  const product = await Product.findById(req.query.productId);
 
   if (!product) {
     return next(new ErrorHandler("Product not found", 404));
   }
 
   const reviews = product.reviews.filter(
-    (rev) => rev._id.toString() !== req.query.id.toString() // normal id repersent id of the review
+    (rev) => rev._id.toString() !== req.query.id.toString() 
   );
 
   let avg = 0;
@@ -301,9 +290,6 @@ const deleteReview = catchAsyncError(async (req, res, next) => {
     success: true,
   });
 });
-
-//agr hum data dete hai body ke ander toh hum req.body likhte hai. Agr hum url me ?ke bad dete hai use query kehte hai aur use req.query.id/ jo bhi hia vese likhte hai aur agr sird id likhte hai kiis product in url /router me toh use req.paras.id likhte hai
-
 module.exports = {
   getAllProducts,
   createProduct,
