@@ -1,5 +1,5 @@
 const ErrorHandler = require("../utils/errorhandler");
-const catchAsyncError = require("../middleware/catchAsyncError"); // ye vha kaam aata hai jese agr createProduct me name enter krna mandatory hai aur uske diya bne submit kre toh infite waiting loop me jaayega usko detect krne k liye
+const catchAsyncError = require("../middleware/catchAsyncError"); 
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const sendToken = require("../utils/jwtToken");
@@ -71,14 +71,13 @@ const loginUser = catchAsyncError(async (req, res, next) => {
     return next(new ErrorHandler("Please Enter Email and Password", 400));
   }
 
-  const user = await User.findOne({ email }).select("+password"); //hmne hmare model me select :false kiya tha password me jisse pasword na dikhe selection ke time toh hum allg se likh rhe hai +password to get password
+  const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
 
   const isPasswordMatched = await bcrypt.compare(password, user.password);
-  // console.log(isPasswordMatched); //we have created a method of it in userModel but its not working thatss why i have done it inline
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Invalid email or password", 401));
   }
@@ -156,11 +155,9 @@ const resetPassword = catchAsyncError(async (req, res, next) => {
     .createHash("sha256")
     .update(req.params.token)
     .digest("hex");
-  // humne forgotpassword jab kiya toh hmne resetToken bnaya aur uska hash resetPasswordToken me store kiya database me . Ab jab humpe resetlink aaya usme hum resettoken as a para. bhej rhe hai. Ab hum us parameter ko leke firse hash krrhe hai and we are seeing if we can finnd the same hash in databse. If yes then yes u can change the password
-
   const user = await User.findOne({
     resetPasswordToken,
-    resetPasswordExpire: { $gt: Date.now() }, // jabb hum reset ka link bhej rhe hai we are also defininf the time until which we are allowe to reset the paswwrod . Toh jab hum link pe click krte hai pehle hum resethash check krte hai fir hum chekc krte hai ki hmara password change krne ka time khtm toh nhi hua hai
+    resetPasswordExpire: { $gt: Date.now() }, 
   });
 
   if (!user) {
@@ -194,11 +191,10 @@ const getUserDetails = catchAsyncError(async (req, res, next) => {
     user,
   });
 });
-// both update funtions down are accesible by a logged in user so req.id is known to us cause user is logged in
 const updatePassword = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
 
-  const isPasswordMatched = await user.comparePassword(req.body.oldPassword); // kya entered password matches the previous one
+  const isPasswordMatched = await user.comparePassword(req.body.oldPassword); 
 
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Old password is incorrect", 400));
