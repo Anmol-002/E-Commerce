@@ -18,7 +18,7 @@ exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
     next();
 });
 
-exports.authorizedRoles = (...roles) => { //here roles contain admin given in the product controller section. req.body.role is the role given while making the model
+exports.authorizedRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
