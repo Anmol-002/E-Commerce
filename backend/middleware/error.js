@@ -11,7 +11,6 @@ module.exports = (err, req, res, next) => {
   }
 
   // Mongoose duplicate key error
-  // new user jab voh email daale jo pehle se used hai toh error messages ko updaate krne ke lie likhe hai sare
   if (err.code === 11000) {
     const message = `Duplicate ${Object.keys(err.keyValue)} Entered`;
     err = new ErrorHandler(message, 400);
