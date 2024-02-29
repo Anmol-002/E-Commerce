@@ -45,17 +45,13 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
-// arrow function me this keyword use nhi kr skte
 userSchema.pre("save", async function (next) {
-  //save hone se pehle schema ye changes honge unme
-
+ 
   if (!this.isModified("password")) {
-    next(); //agr hum modify krte hai name vgera pas password nhi krte toh vapas is presave me ghusta aur hashed password ko firse hash krdeta. We will hash the password  only when its changed. isModified checks if the password has been changed
+    next(); 
   }
   this.password = await bcrypt.hash(this.password, 10);
 });
-
-// JWT TOKEN pehle yha likho neeche ka fir userCOntrller me jaake import kro as a method of constant user created there and log it to see the token
 userSchema.methods.getJWTToken = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -76,7 +72,6 @@ userSchema.methods.getResetPasswordToken = function () {
   // Generating Token
   const resetToken = crypto.randomBytes(20).toString("hex");
 
-  // Hashing and adding resetPasswordToken to userSchema
   this.resetPasswordToken = crypto
     .createHash("sha256")
     .update(resetToken)
