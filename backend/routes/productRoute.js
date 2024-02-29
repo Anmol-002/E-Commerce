@@ -12,7 +12,6 @@ const {
   uploadImages,
 } = require("../controllers/productController");
 const { isAuthenticatedUser, authorizedRoles } = require("../middleware/auth");
-// isauthenticated user ye dekh rha hai ki bnda logged in hai ya nhi ya uski cookie active hai ya nhi , authorized role ye check kr rha ki voh given request access kr skta hai ya nhi uskke role ke hisab se uspe permissions hai ya nhi
 const router = express.Router();
 
 router.route("/products").get(getAllProducts);
