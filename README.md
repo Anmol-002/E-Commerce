@@ -40,6 +40,7 @@ WisdomWeaven is a one-stop platform designed to uplift and celebrate the wisdom 
    - Run `npm start` to launch the frontend.
 
 ## Individual subparts repo's:
+- **Entire Repo**: https://github.com/Anmol-002/Social-Media
 - **Social Media**: https://github.com/Anmol-002/social-media-backend
 - **Ecommerce**: https://github.com/Anmol-002/E-commerce
 - **SocketIo**: https://github.com/Anmol-002/socialmedia-socket
